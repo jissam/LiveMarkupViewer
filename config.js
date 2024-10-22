@@ -7,7 +7,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 // This line destructures specific environment variables (APS_CLIENT_ID, APS_CLIENT_SECRET, APS_BUCKET, and PORT) from the process.env object. These variables are typically defined in the .env file.
-let { APS_CLIENT_ID, APS_CLIENT_SECRET, APS_BUCKET, PORT } = process.env;
+let { APS_CLIENT_ID, APS_CLIENT_SECRET, APS_BUCKET } = process.env;
 
 // This conditional check ensures that the required environment variables (APS_CLIENT_ID and APS_CLIENT_SECRET) are defined. If they are missing, a warning is logged to the console, and the script exits with a non-zero status code (1).
 if (!APS_CLIENT_ID || !APS_CLIENT_SECRET) {
@@ -19,7 +19,7 @@ if (!APS_CLIENT_ID || !APS_CLIENT_SECRET) {
 APS_BUCKET = APS_BUCKET || `${APS_CLIENT_ID.toLowerCase()}-basic-app`;
 
 // this line sets the PORT variable to the value defined in the environment variables or 8080 as a default if not defined.
-PORT = PORT || 8080;
+PORT = process.env.PORT || 8080;
 
 // This exports an object containing the environment variables and their values, making them available for other parts of your Node.js application. These variables can be accessed using require in other modules or scripts.
 module.exports = {
