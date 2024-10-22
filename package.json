@@ -7,6 +7,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "heroku-postbuild": "webpack --mode production",
     "start": "webpack serve --mode production",
     "build": "webpack",
     "dev": "webpack --mode development && node server.js",
