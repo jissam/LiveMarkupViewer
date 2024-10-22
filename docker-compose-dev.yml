@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  # Définition du service de base de données PostgreSQL
+  postgresdb:
+    image: postgres:latest
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - POSTGRES_USER=$POSTGRESDB_USER
+      - POSTGRES_PASSWORD=$POSTGRESDB_ROOT_PASSWORD
+      - POSTGRES_DB=$POSTGRESDB_DATABASE
+    ports:
+      - $POSTGRESDB_LOCAL_PORT:$POSTGRESDB_DOCKER_PORT
+    volumes:
+      - db:/var/lib/postgresql/data
+
+  # Définition du service de l'application
+  app:
+    # Dépendance sur le service postgresdb, attend que celui-ci soit démarré
+    depends_on:
+      - postgresdb
+    # Configuration de la construction de l'image à partir d'un Dockerfile spécifique
+    build: 
+      context: .
+      dockerfile: Dockerfile.dev
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
+    volumes:
+      - wwwroot:/wwwroot
+      - routes:/routes
+      - services:/services
+    environment:
+      # Configuration des variables d'environnement pour l'application
+      - DB_HOST=postgresdb
+      - DB_USER=$POSTGRESDB_USER
+      - DB_PASSWORD=$POSTGRESDB_ROOT_PASSWORD
+      - DB_NAME=$POSTGRESDB_DATABASE
+      - DB_PORT=$POSTGRESDB_DOCKER_PORT
+    stdin_open: true
+    tty: true
+
+# Définition des volumes utilisés par les services
+volumes: 
+  db:        # Volume pour les données de la base de données PostgreSQL
+  wwwroot:   # Volume pour les fichiers de l'application
+  services:  # Volume pour les services de l'application
+  routes:    # Volume pour les routes de l'application
