@@ -3,4 +3,5 @@ build:
     web: Dockerfile
 
 run:
-  web: docker run -p 8080:8080 livemarkupviewer
+  # web: docker run -p 8080:8080 livemarkupviewer
+  web: ./start.sh
